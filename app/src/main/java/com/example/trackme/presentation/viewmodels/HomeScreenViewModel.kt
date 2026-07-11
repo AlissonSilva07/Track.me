@@ -1,8 +1,5 @@
 package com.example.trackme.presentation.viewmodels
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.ui.text.intl.LocaleList
 import androidx.lifecycle.ViewModel
 import com.example.trackme.core.getWeekDays
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,7 +21,6 @@ sealed class HomeScreenEvent {
     data class OnChangeSelectedDay(val date: LocalDate) : HomeScreenEvent()
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor() : ViewModel() {
 
@@ -42,10 +38,11 @@ class HomeScreenViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun loadDays() {
+        val weeks = getWeekDays()
         _uiState.update {
             it.copy(
-                daysList = getWeekDays(),
-                selectedDay = it.daysList.firstOrNull { date -> date == LocalDate.now() }
+                daysList = weeks,
+                selectedDay = LocalDate.now()
             )
         }
     }

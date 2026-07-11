@@ -1,13 +1,11 @@
 package com.example.trackme.presentation.components
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Card
@@ -23,41 +21,44 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.trackme.presentation.ui.theme.BricolageGrotesqueFontFamily
+import com.example.trackme.presentation.ui.theme.GoogleSansFontFamily
 import com.example.trackme.presentation.ui.theme.LimeGreen
 import com.example.trackme.presentation.ui.theme.TrackmeTheme
 import com.example.trackme.presentation.ui.theme.VibrantBlue
-import com.example.trackme.presentation.ui.theme.primary
 import java.time.LocalDate
 
 enum class CalendarDayItemType {
     PAST,
-    CURRENT,
+    TODAY,
+    SELECTED,
     FUTURE
 }
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun CalendarDayItem(
     date: LocalDate = LocalDate.now(),
     dayNumber: String = "1",
     dayAbbreviation: String = "Seg",
-    type: CalendarDayItemType = CalendarDayItemType.CURRENT,
+    type: CalendarDayItemType = CalendarDayItemType.TODAY,
     onClick: (LocalDate) -> Unit = {}
 ) {
-    val cardContainerolor = when(type) {
+    val cardContainerColor = when (type) {
         CalendarDayItemType.PAST -> LimeGreen
-        CalendarDayItemType.CURRENT -> VibrantBlue
+        CalendarDayItemType.TODAY -> VibrantBlue
+        CalendarDayItemType.SELECTED -> MaterialTheme.colorScheme.primary
         CalendarDayItemType.FUTURE -> MaterialTheme.colorScheme.surface
     }
 
-    val cardContentColor = when(type) {
+    val cardContentColor = when (type) {
         CalendarDayItemType.PAST -> Color.Black
-        CalendarDayItemType.CURRENT -> Color.White
+        CalendarDayItemType.TODAY -> Color.White
+        CalendarDayItemType.SELECTED -> MaterialTheme.colorScheme.onPrimary
         CalendarDayItemType.FUTURE -> MaterialTheme.colorScheme.onBackground
     }
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = cardContainerolor,
+            containerColor = cardContainerColor,
             contentColor = cardContentColor
         ),
         onClick = {
@@ -80,7 +81,7 @@ fun CalendarDayItem(
             Spacer(Modifier.height(4.dp))
             Text(
                 text = dayAbbreviation,
-                fontFamily = BricolageGrotesqueFontFamily,
+                fontFamily = GoogleSansFontFamily,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -88,33 +89,37 @@ fun CalendarDayItem(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun CalendarDayItemPreview() {
-    TrackmeTheme {
+    TrackmeTheme(
+        darkTheme = false,
+        dynamicColor = false
+    ) {
         Row(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             CalendarDayItem(type = CalendarDayItemType.PAST)
-            CalendarDayItem(type = CalendarDayItemType.CURRENT)
+            CalendarDayItem(type = CalendarDayItemType.TODAY)
             CalendarDayItem(type = CalendarDayItemType.FUTURE)
         }
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun CalendarDayItemPreviewDark() {
     TrackmeTheme(
-        darkTheme = true
+        darkTheme = true,
+        dynamicColor = false
     ) {
         Row(
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             CalendarDayItem(type = CalendarDayItemType.PAST)
-            CalendarDayItem(type = CalendarDayItemType.CURRENT)
+            CalendarDayItem(type = CalendarDayItemType.TODAY)
             CalendarDayItem(type = CalendarDayItemType.FUTURE)
         }
     }

@@ -1,12 +1,11 @@
 package com.example.trackme.presentation.components
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ data class CalendarDayData(
     val abbreviation: String
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CalendarDayRow(
     modifier: Modifier = Modifier,
@@ -47,7 +45,14 @@ fun CalendarDayRow(
 
     val today = LocalDate.now()
 
+    val initialIndex = daysList.indexOf(selectedDay).coerceAtLeast(0)
+
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = initialIndex
+    )
+
     LazyRow(
+        state = listState,
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -57,10 +62,11 @@ fun CalendarDayRow(
         }
         items(list) { item ->
             val type = when {
+                item.date == selectedDay -> CalendarDayItemType.SELECTED
+                item.date == today -> CalendarDayItemType.TODAY
                 item.date.isBefore(today) -> CalendarDayItemType.PAST
                 item.date.isAfter(today) -> CalendarDayItemType.FUTURE
-                item.date == selectedDay -> CalendarDayItemType.CURRENT
-                else -> CalendarDayItemType.CURRENT
+                else -> CalendarDayItemType.FUTURE
             }
 
             CalendarDayItem(
@@ -77,7 +83,6 @@ fun CalendarDayRow(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun CalendarDayRowPreview() {
@@ -89,7 +94,6 @@ fun CalendarDayRowPreview() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun CalendarDayRowPreviewDark() {

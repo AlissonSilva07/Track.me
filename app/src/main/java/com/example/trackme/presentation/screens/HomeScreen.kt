@@ -1,7 +1,5 @@
 package com.example.trackme.presentation.screens
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,16 +16,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.trackme.core.getWeekDays
 import com.example.trackme.presentation.components.CalendarDayRow
 import com.example.trackme.presentation.components.HomeHeader
+import com.example.trackme.presentation.navigation.Screen
 import com.example.trackme.presentation.ui.theme.TrackmeTheme
 import com.example.trackme.presentation.viewmodels.HomeScreenEvent
 import com.example.trackme.presentation.viewmodels.HomeScreenUiState
 import com.example.trackme.presentation.viewmodels.HomeScreenViewModel
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    backStack: SnapshotStateList<Screen>,
     viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -37,7 +37,6 @@ fun HomeScreen(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
@@ -68,11 +67,12 @@ fun HomeScreenContent(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun HomeScreenPreview() {
-    TrackmeTheme {
+    TrackmeTheme(
+        dynamicColor = false
+    ) {
         HomeScreenContent(
             state = HomeScreenUiState(
                 daysList = getWeekDays(),
@@ -83,12 +83,12 @@ fun HomeScreenPreview() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun HomeScreenPreviewDark() {
     TrackmeTheme(
-        darkTheme = true
+        darkTheme = true,
+        dynamicColor = false
     ) {
         HomeScreenContent(
             state = HomeScreenUiState(
