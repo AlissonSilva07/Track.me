@@ -14,8 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.trackme.core.getWeekDays
+import com.example.trackme.data.Habits
 import com.example.trackme.presentation.components.CalendarDayRow
 import com.example.trackme.presentation.components.HomeHeader
+import com.example.trackme.presentation.components.HorizontalGrid
 import com.example.trackme.presentation.navigation.Screen
 import com.example.trackme.presentation.ui.theme.TrackmeTheme
 import com.example.trackme.presentation.viewmodels.HomeScreenEvent
@@ -63,6 +65,9 @@ fun HomeScreenContent(
                     onEvent(HomeScreenEvent.OnChangeSelectedDay(it))
                 }
             )
+        }
+        item {
+            HorizontalGrid(habitsList = Habits.emptyList)
         }
     }
 }
